@@ -8,8 +8,12 @@ const io = require('socket.io')();
 const headerPrinter = require('./headerPrinter');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const mongoose = require('mongoose');
+const initializer = require('./init/initalizer');
 
 const app = express();
+
+initializer.InitMongoDb(process.env, mongoose);
 
 app.io= io;
 
@@ -59,7 +63,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error')
 });
 
 module.exports = app;

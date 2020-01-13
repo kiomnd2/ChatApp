@@ -39,14 +39,14 @@ router.post('/', (req,res,next)=>{
 router.post("/", (req,res,next)=>{
   const {id, password} = req.body;
 
-  if(id !== '김형익')
+  if(!id)
   {
     // res.status(404).json({message:"User not found"});
     //에럭 객체 생성해 주어도 됌
     const error = new Error("Bad Request");
     error.status = 400;
     next(error);
-  }else if(password !== '김형익123') {
+  }else if(!password) {
     // res.status(401).json({message:"Invalid Password"});
     const error = new Error("Bad Request");
     error.status = 400;

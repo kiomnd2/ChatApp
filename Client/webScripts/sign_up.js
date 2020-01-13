@@ -1,5 +1,4 @@
 (()=>{
-
     const election = require('electron');
     const ipcRenderer = election.ipcRenderer;
     const SocketEvent = require('././handlerManager/event/SocketEvent');
@@ -10,14 +9,20 @@
     const userIdInput=  document.getElementById('user-id-input');
     const userPasswordInput = document.getElementById('user-password-input');
 
-    const signInButton = document.getElementById('button-SignIn');
     const signUpButton = document.getElementById('button-SignUp');
+    const cancelButton = document.getElementById('button-Cancel');
 
-    const hidePage = document.getElementById('hide-page');
     /**
      * 로그인 시
      */
-    signInButton.addEventListener('click', () =>{
+    cancelButton.addEventListener('click', () =>{
+        ipcRenderer.send('destroySignUpModal');
+    });
+
+    /**
+     * 회원가입 시
+     */
+    signUpButton.addEventListener('click', () =>{
         console.log('click');
         const id = userIdInput.value;
         const password = userPasswordInput.value;
@@ -25,29 +30,16 @@
             id : id,
             password : password
         };
-        ipcRenderer.send('signInRequest', parameter);
+        ipcRenderer.send('signUpRequest', parameter);
     });
-
-    ipcRenderer.on('signInRequest-Success',(event,message)=>{
+    ipcRenderer.on('signUpRequest-Success',(event,message)=>{
         console.log(message);
-        alert("로그인 성공");
-        ipcRenderer.send('displayWaitDialog',message);
+        alert("가입성공");
+        ipcRenderer.send('destroySignUpModal');
     });
-
-    ipcRenderer.on('signInRequest-Failed',(event,message)=>{
+    ipcRenderer.on('signUpRequest-Failed',(event,message)=>{
         console.log(message);
         alert(message.statusText);
-        ipcRenderer.send('displayWaitDialog',message);
-    });
-
-    ipcRenderer.on('hide-page', (event,message)=>{
-        hidePage.classList.toggle('on')
-    });
-    /**
-     * 회원가입 시
-     */
-    signUpButton.addEventListener('click', () =>{
-        ipcRenderer.send('displaySignUpModal');
     });
 
 })();
